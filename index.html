@@ -1,60 +1,46 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HYPER Vault</title>
-  <link rel="icon"
-    href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyTDIgMjJoMjJMMTIgMloiLz48L3N2Zz4=" />
-
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyTDIgMjJoMjJMMTIgMloiLz48L3N2Zz4=" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
-    rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
-    /* inspired by tokyo night*/
     :root {
       --bg: #1e1e2e;
       --fg: #cdd6f4;
       --subtext: #a6adc8;
       --accent: rgba(203, 166, 247, 0.1);
-      --accent-hover: rgba(203, 166, 247, 0.15);
       --primary: #cba6f7;
       --blue: #89b4fa;
       --green: #a6e3a1;
       --red: #f38ba8;
       --border: rgba(203, 166, 247, 0.15);
-      --font-scale: 1;
       --transition: 0.15s cubic-bezier(0.2, 0, 0, 1);
       --glow: 0 0 20px rgba(203, 166, 247, 0.25);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      outline: none;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
 
     body {
       background-color: var(--bg);
       color: var(--fg);
       font-family: "Inter", sans-serif;
-      font-size: calc(16px * var(--font-scale));
       min-height: 100vh;
       overflow-x: hidden;
     }
 
+    /* Scanline Effect */
     body::before {
       content: " ";
       display: block;
       position: fixed;
       inset: 0;
       background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%),
-        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+                  linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
       z-index: 1000;
       background-size: 100% 3px, 3px 100%;
       pointer-events: none;
@@ -78,10 +64,7 @@
       z-index: -1;
     }
 
-    .mono {
-      font-family: "JetBrains Mono", monospace;
-      text-transform: lowercase;
-    }
+    .mono { font-family: "JetBrains Mono", monospace; text-transform: lowercase; }
 
     #status-bar {
       position: fixed;
@@ -103,39 +86,16 @@
       font-size: 0.75rem;
     }
 
-    .status-pill {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-    }
+    .status-pill { display: flex; align-items: center; gap: 1.2rem; }
+    .status-item.clock { color: var(--primary); font-weight: 700; }
+    .status-dot { width: 7px; height: 7px; border-radius: 1px; background: #444; transition: 0.3s; }
+    
+    /* Sync Status Colors */
+    .status-dot.connected { background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .status-dot.cached { background: var(--blue); box-shadow: 0 0 10px var(--blue); }
+    .status-dot.failed { background: var(--red); box-shadow: 0 0 10px var(--red); }
 
-    .status-item.clock {
-      color: var(--primary);
-      font-weight: 700;
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 1px;
-      background: #444;
-    }
-
-    .status-dot.connected {
-      background: var(--green);
-      box-shadow: 0 0 10px var(--green);
-    }
-
-    .status-dot.failed {
-      background: var(--red);
-      box-shadow: 0 0 10px var(--red);
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 6rem 2rem 4rem;
-    }
+    main { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem 4rem; }
 
     #hero-section {
       display: grid;
@@ -154,17 +114,8 @@
       border-radius: 4px;
     }
 
-    .neo-title {
-      color: var(--blue);
-      font-weight: 700;
-      margin-bottom: 4px;
-      display: block;
-    }
-
-    .neo-label {
-      color: var(--primary);
-      font-weight: 600;
-    }
+    .neo-title { color: var(--blue); font-weight: 700; margin-bottom: 4px; display: block; }
+    .neo-label { color: var(--primary); font-weight: 600; }
 
     #search-input {
       width: 100%;
@@ -177,37 +128,12 @@
       padding: 1.25rem 1.5rem;
     }
 
-    #search-input:focus {
-      border-color: var(--primary);
-      box-shadow: var(--glow);
-    }
+    #search-input:focus { border-color: var(--primary); box-shadow: var(--glow); }
 
-    .folder {
-      margin-bottom: 4.5rem;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: 0.5s ease forwards;
-    }
-
-    .folder.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .folder-title {
-      font-size: 0.8rem;
-      color: var(--blue);
-      margin-bottom: 1.25rem;
-      font-family: "JetBrains Mono";
-      display: flex;
-      gap: 10px;
-    }
-
-    .folder-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 8px;
-    }
+    .folder { margin-bottom: 4.5rem; opacity: 0; transform: translateY(10px); transition: 0.5s ease forwards; }
+    .folder.visible { opacity: 1; transform: translateY(0); }
+    .folder-title { font-size: 0.8rem; color: var(--blue); margin-bottom: 1.25rem; font-family: "JetBrains Mono"; display: flex; gap: 10px; }
+    .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
 
     .app-tile {
       background: rgba(30, 30, 46, 0.5);
@@ -221,27 +147,12 @@
       transition: var(--transition);
     }
 
-    .app-tile:hover {
-      background: var(--accent);
-      border-color: var(--primary);
-      transform: translateY(-2px);
-    }
+    .app-tile:hover { background: var(--accent); border-color: var(--primary); transform: translateY(-2px); }
+    .app-url { font-size: 0.65rem; color: var(--subtext); font-family: "JetBrains Mono"; }
 
-    .app-url {
-      font-size: 0.65rem;
-      color: var(--subtext);
-      font-family: "JetBrains Mono";
-    }
-
-    #empty-state {
-      display: none;
-      text-align: center;
-      color: var(--red);
-      padding: 5rem;
-    }
+    #empty-state { display: none; text-align: center; color: var(--red); padding: 5rem; }
   </style>
 </head>
-
 <body>
   <div id="wallpaper"></div>
   <div id="overlay"></div>
@@ -265,7 +176,7 @@
       <section id="neofetch">
         <span class="neo-title">Vault@Hyper</span>
         <hr style="border:0; border-top:1px solid var(--border); margin: 5px 0 10px">
-        <div><span class="neo-label">OS:</span> Hyper Vault v1.0</div>
+        <div><span class="neo-label">OS:</span> Hyper Vault v1.1</div>
         <div><span class="neo-label">UPTIME:</span> <span id="uptime">0h 0m</span></div>
         <div><span class="neo-label">PACKAGES:</span> <span id="pkg-count">0</span></div>
         <div><span class="neo-label">SHELL:</span> zsh</div>
@@ -289,21 +200,17 @@
   <script>
     const FALLBACK_DATA = {
       wallpaper: "https://w.wallhaven.cc/full/rq/wallhaven-rq75r7.jpg",
-      apps: [
-        {name: "the vault is not able to connect", url: "https://hypervisuals.pages.dev", tag: "my website"},
-      ],
+      apps: [{name: "offline mode active", url: "#", tag: "system"}],
     };
-    //fetches the data from my github geist  so i dont need a db to store this
-    //but its slow 😭
+
     const CONFIG = {
-      gistUrl: "https://gist.githubusercontent.com/ABHIJEETH-V-N/8e849001208c64ca07fa9e1ec6736f23/raw/8b1e2e0cad7a15335e5bc951caa8375cd0dd6abc/bookmarks.json",
-      proxy: "https://api.allorigins.win/raw?url=",
+      // Direct raw link often bypasses CORS or works with minimal proxying
+      gistUrl: "https://gist.githubusercontent.com/ABHIJEETH-V-N/8e849001208c64ca07fa9e1ec6736f23/raw/bookmarks.json",
     };
 
     let currentVault = FALLBACK_DATA;
     const startTime = Date.now();
 
-    // DOM Elements
     const elements = {
       clock: document.getElementById("clock"),
       syncDot: document.getElementById("sync-dot"),
@@ -320,22 +227,36 @@
     function updateStats() {
       const now = new Date();
       elements.clock.textContent = now.toLocaleTimeString("en-GB", {hour12: false});
-
       const diff = Math.floor((Date.now() - startTime) / 1000);
       elements.uptime.textContent = `${Math.floor(diff / 3600)}h ${Math.floor((diff % 3600) / 60)}m`;
       elements.cpuLoad.textContent = `cpu::${(Math.random() * 2 + 0.5).toFixed(1)}%`;
     }
 
     async function loadVault() {
-      try {
-        const res = await fetch(`${CONFIG.proxy}${encodeURIComponent(CONFIG.gistUrl)}`);
-        if (!res.ok) throw new Error();
-        currentVault = await res.json();
-        updateSync("connected");
-      } catch (e) {
-        updateSync("failed");
+      // 1. Instant load from Cache
+      const cached = localStorage.getItem('hyper_vault_cache');
+      if (cached) {
+        currentVault = JSON.parse(cached);
+        updateSync("cached");
+        render();
       }
-      render();
+
+      // 2. Background Fetch
+      try {
+        // Use a timestamp to prevent the browser from caching a "failed" response
+        const response = await fetch(`${CONFIG.gistUrl}?t=${Date.now()}`);
+        if (!response.ok) throw new Error("Fetch failed");
+        
+        currentVault = await response.json();
+        
+        // 3. Update Cache and UI
+        localStorage.setItem('hyper_vault_cache', JSON.stringify(currentVault));
+        updateSync("connected");
+        render();
+      } catch (e) {
+        console.error("Sync Error:", e);
+        if (!cached) updateSync("failed");
+      }
     }
 
     function updateSync(status) {
@@ -345,6 +266,8 @@
 
     function render(filter = "") {
       elements.vaultContent.innerHTML = "";
+      if (!currentVault.apps) return;
+      
       elements.pkgCount.textContent = currentVault.apps.length;
 
       if (currentVault.wallpaper) {
@@ -371,19 +294,22 @@
         const section = document.createElement("section");
         section.className = "folder";
         section.innerHTML = `
-            <h2 class="folder-title"><span>#</span> ${tag}</h2>
-            <div class="folder-grid">
-              ${grouped[tag].map(app => `
+          <h2 class="folder-title"><span>#</span> ${tag}</h2>
+          <div class="folder-grid">
+            ${grouped[tag].map(app => {
+              let displayUrl = "link";
+              try { displayUrl = new URL(app.url).hostname; } catch(e){}
+              return `
                 <a href="${app.url}" target="_blank" class="app-tile">
                   <div class="app-info">
                     <div class="app-name">${app.name}</div>
-                    <div class="app-url">${new URL(app.url).hostname}</div>
+                    <div class="app-url">${displayUrl}</div>
                   </div>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity="0.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
                 </a>
-              `).join('')}
-            </div>
-          `;
+              `}).join('')}
+          </div>
+        `;
         elements.vaultContent.appendChild(section);
         setTimeout(() => section.classList.add('visible'), 50);
       });
@@ -391,9 +317,7 @@
 
     elements.searchInput.addEventListener("input", (e) => render(e.target.value));
     setInterval(updateStats, 1000);
-    window.onload = () => {updateStats(); loadVault();};
+    window.onload = () => { updateStats(); loadVault(); };
   </script>
 </body>
-
 </html>
-
